@@ -1,2 +1,3 @@
 mongodb/data
 jenkins_home/logs
+jenkins_home/.cache
