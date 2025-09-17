@@ -49,21 +49,31 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../portainer/data:/data
     restart: always
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    # volumes:
-      # # 挂载主 Nginx 配置文件 (注意：这会覆盖容器内的默认配置)
-      # - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      # # 挂载自定义 server 块配置文件（通常放在 conf.d 目录）
-      # - ../nginx/conf.d/:/etc/nginx/conf.d/:ro
-      # # 挂载静态网站文件或前端构建产物目录
-      # - ./www/html/:/usr/share/nginx/html:ro
-      # 挂载日志目录，方便在宿主机查看日志
-      # - ../nginx/logs/:/var/log/nginx/
-      # # 挂载 SSL 证书目录（如果启用 HTTPS）
-      # - ../nginx/ssl/:/etc/nginx/ssl/:ro
-    restart: always
+  nginx-proxy-manager:
+      image: 'jc21/nginx-proxy-manager:latest'
+      restart: unless-stopped
+      ports:
+        - '80:80'              # 不建议修改端口
+        - '81:81'              # 可以把冒号左边的 81 端口修改成服务器上没有被占用的端口
+        - '443:443'            # 不建议修改端口
+      volumes:
+        - ../nginx_proxy_manager/data:/data
+        - ../nginx_proxy_manager/letsencrypt:/etc/letsencrypt
+  # nginx:
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   # volumes:
+  #     # # 挂载主 Nginx 配置文件 (注意：这会覆盖容器内的默认配置)
+  #     # - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     # # 挂载自定义 server 块配置文件（通常放在 conf.d 目录）
+  #     # - ../nginx/conf.d/:/etc/nginx/conf.d/:ro
+  #     # # 挂载静态网站文件或前端构建产物目录
+  #     # - ./www/html/:/usr/share/nginx/html:ro
+  #     # 挂载日志目录，方便在宿主机查看日志
+  #     # - ../nginx/logs/:/var/log/nginx/
+  #     # # 挂载 SSL 证书目录（如果启用 HTTPS）
+  #     # - ../nginx/ssl/:/etc/nginx/ssl/:ro
+  #   restart: always
