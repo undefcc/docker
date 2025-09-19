@@ -20,25 +20,27 @@ services:
     command: redis-server --requirepass arco666psw
     ports:
       - "6379:6379"
-  jenkins:
-    image: jenkins/jenkins:2.504.3-lts
-    container_name: jenkins           # 指定容器名称，便于管理
-    ports:
-      - "8080:8080"                   # Web 界面访问端口 (宿主机端口:容器端口)
-      - "50000:50000"                 # Jenkins Agent 通信端口
-    volumes:
-      # 持久化数据卷：将 Jenkins 数据目录挂载到宿主机，防止数据丢失
-      - ../jenkins_home:/var/jenkins_home  # 请确保宿主机目录存在且权限正确 (如: sudo chown -R 1000:1000 /opt/docker/jenkins_home)
-      # 如需在 Jenkins 容器内使用宿主机 Docker 引擎（例如在 Pipeline 中构建镜像），通常需要挂载以下两项：
-      - /var/run/docker.sock:/var/run/docker.sock   # 挂载 Docker 守护进程套接字
-      - /usr/bin/docker:/usr/bin/docker             # 挂载 Docker 客户端二进制文件
-    environment:
-      # 可设置 JVM 内存参数，根据你的服务器情况调整
-      - JAVA_OPTS=-Xmx1024m -Xms512m
-      # 可设置时区
-      - TZ=Asia/Shanghai
-    restart: always                   # 设置容器自动重启策略（unless-stopped 除非手动停止）
-    # privileged: true                # 有时为避免权限问题，可能会需要此选项（谨慎使用）
+  # jenkins:
+  #   image: jenkins/jenkins:2.504.3-lts
+  #   container_name: jenkins           # 指定容器名称，便于管理
+  #   ports:
+  #     - "8080:8080"                   # Web 界面访问端口 (宿主机端口:容器端口)
+  #     - "50000:50000"                 # Jenkins Agent 通信端口
+  #   user: root                        # 以 root 用户运行，方便安装插件和工具（注意安全性）
+  #   volumes:
+  #     # 持久化数据卷：将 Jenkins 数据目录挂载到宿主机，防止数据丢失
+  #     - ../jenkins_home:/var/jenkins_home  # 请确保宿主机目录存在且权限正确 (如: sudo chown -R 1000:1000 /opt/docker/jenkins_home)
+  #     # 如需在 Jenkins 容器内使用宿主机 Docker 引擎（例如在 Pipeline 中构建镜像），通常需要挂载以下两项：
+  #     - /var/run/docker.sock:/var/run/docker.sock   # 挂载 Docker 守护进程套接字
+  #     - /usr/bin/docker:/usr/bin/docker             # 挂载 Docker 客户端二进制文件
+  #     - /etc/localtime:/etc/localtime:ro           # 同步宿主机时间到容器内（可选）
+  #   environment:
+  #     # 可设置 JVM 内存参数，根据你的服务器情况调整
+  #     - JAVA_OPTS=-Xmx1024m -Xms512m
+  #     # 可设置时区
+  #     - TZ=Asia/Shanghai
+  #   restart: always                   # 设置容器自动重启策略（unless-stopped 除非手动停止）
+  #   privileged: true                # 有时为避免权限问题，可能会需要此选项（谨慎使用）
   portainer:
     image: portainer/portainer-ce
     container_name: portainer
